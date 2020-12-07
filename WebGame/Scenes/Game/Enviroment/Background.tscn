@@ -1,0 +1,62 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Sprites/UI/Buttons/button.png" type="Texture" id=1]
+[ext_resource path="res://Scenes/Game/Enviroment/Background.gd" type="Script" id=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+
+uniform vec4 c1 : hint_color;
+uniform vec4 c2 : hint_color;
+
+uniform sampler2D pn1;
+uniform sampler2D pn2;
+uniform vec2 world_pos;
+uniform vec2 scaling = vec2(1,1);
+uniform vec2 world_scaling = vec2(1,1);
+
+void fragment()
+{
+	vec3 color;
+	float n1 = texture(pn1, scaling * (UV.xy + world_pos/world_scaling)).r;
+	float n2 = texture(pn2, scaling * (UV.xy + world_pos/world_scaling)).r;
+	n1 = smoothstep( 0.13, 1.0, (n1 + n2)/2.0);
+	//color = vec3(n1);
+	color = c1.rgb * n1 + c2.rgb * n2;
+	
+	COLOR = vec4(color, n1);
+}"
+
+[sub_resource type="OpenSimplexNoise" id=5]
+
+[sub_resource type="NoiseTexture" id=6]
+seamless = true
+noise = SubResource( 5 )
+
+[sub_resource type="OpenSimplexNoise" id=7]
+seed = 1
+period = 138.0
+persistence = 0.229
+lacunarity = 3.03
+
+[sub_resource type="NoiseTexture" id=8]
+seamless = true
+noise = SubResource( 7 )
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 1 )
+shader_param/c1 = Color( 0.894118, 0.0470588, 0.0470588, 1 )
+shader_param/c2 = Color( 0.207843, 0.215686, 0.686275, 1 )
+shader_param/world_pos = Vector2( 0.749161, -1.10272 )
+shader_param/scaling = Vector2( 1, 1 )
+shader_param/world_scaling = Vector2( 100, 100 )
+shader_param/pn1 = SubResource( 6 )
+shader_param/pn2 = SubResource( 8 )
+
+[node name="Background" type="Sprite"]
+material = SubResource( 4 )
+position = Vector2( 0.749161, -1.10272 )
+scale = Vector2( 0.567202, 1 )
+texture = ExtResource( 1 )
+script = ExtResource( 2 )

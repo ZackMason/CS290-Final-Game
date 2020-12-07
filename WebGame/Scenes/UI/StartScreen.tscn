@@ -1,0 +1,73 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Sprites/UI/Buttons/play_button_down.png" type="Texture" id=1]
+[ext_resource path="res://Sprites/UI/Buttons/play_button.png" type="Texture" id=2]
+[ext_resource path="res://Scenes/UI/StartScreen.gd" type="Script" id=3]
+[ext_resource path="res://Sprites/UI/Buttons/controls_button.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/UI/Buttons/controls_button_down.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/UI/Buttons/controls_button_up.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/UI/Buttons/settings_button_up.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/UI/Buttons/play_button_up.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/UI/Buttons/settings_button.png" type="Texture" id=9]
+[ext_resource path="res://Sprites/UI/Buttons/settings_button_down.png" type="Texture" id=10]
+
+[node name="StartScreen" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.176471, 0.192157, 0.392157, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Background"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -58.0
+margin_top = -27.5
+margin_right = 58.0
+margin_bottom = 27.5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlayButton" type="TextureButton" parent="Background/VBoxContainer"]
+margin_right = 116.0
+margin_bottom = 55.0
+texture_normal = ExtResource( 2 )
+texture_pressed = ExtResource( 1 )
+texture_hover = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ControlsButton" type="TextureButton" parent="Background/VBoxContainer"]
+margin_top = 59.0
+margin_right = 116.0
+margin_bottom = 114.0
+texture_normal = ExtResource( 4 )
+texture_pressed = ExtResource( 5 )
+texture_hover = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SettingsButton" type="TextureButton" parent="Background/VBoxContainer"]
+margin_top = 118.0
+margin_right = 116.0
+margin_bottom = 173.0
+texture_normal = ExtResource( 9 )
+texture_pressed = ExtResource( 10 )
+texture_hover = ExtResource( 7 )
+[connection signal="button_up" from="Background/VBoxContainer/PlayButton" to="." method="_on_PlayButton_button_up"]
+[connection signal="button_up" from="Background/VBoxContainer/ControlsButton" to="." method="_on_ControlsButton_button_up"]
+[connection signal="button_up" from="Background/VBoxContainer/SettingsButton" to="." method="_on_SettingsButton_button_up"]

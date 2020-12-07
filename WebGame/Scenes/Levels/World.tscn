@@ -1,0 +1,97 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://Scenes/Game/Ship.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/Levels/World.gd" type="Script" id=2]
+[ext_resource path="res://Scenes/Game/Enviroment/Background.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/Game/PlayerAI.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/UI/GameUI.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Scenes/UI/Settings.tscn" type="PackedScene" id=6]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+
+uniform vec4 c1 : hint_color;
+uniform vec4 c2 : hint_color;
+
+uniform sampler2D pn1;
+uniform sampler2D pn2;
+uniform vec2 world_pos;
+uniform vec2 scaling = vec2(1,1);
+uniform vec2 world_scaling = vec2(1,1);
+
+void fragment()
+{
+	vec3 color;
+	float n1 = texture(pn1, scaling * (UV.xy + world_pos/world_scaling)).r;
+	float n2 = texture(pn2, scaling * (UV.xy + world_pos/world_scaling)).r;
+	n1 = smoothstep( 0.13, 1.0, (n1 + n2)/2.0);
+	//color = vec3(n1);
+	color = c1.rgb * n1 + c2.rgb * n2;
+	
+	COLOR = vec4(color, n1);
+}"
+
+[sub_resource type="OpenSimplexNoise" id=2]
+
+[sub_resource type="NoiseTexture" id=3]
+seamless = true
+noise = SubResource( 2 )
+
+[sub_resource type="OpenSimplexNoise" id=4]
+seed = 1
+period = 138.0
+persistence = 0.229
+lacunarity = 3.03
+
+[sub_resource type="NoiseTexture" id=5]
+seamless = true
+noise = SubResource( 4 )
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 1 )
+shader_param/c1 = Color( 0.894118, 0.0470588, 0.0470588, 1 )
+shader_param/c2 = Color( 0.207843, 0.215686, 0.686275, 1 )
+shader_param/world_pos = Vector2( 129.749, 89.8973 )
+shader_param/scaling = Vector2( 0.652, 0.348 )
+shader_param/world_scaling = Vector2( 1400, 1400 )
+shader_param/pn1 = SubResource( 3 )
+shader_param/pn2 = SubResource( 5 )
+
+[node name="World" type="Node2D" groups=[
+"world",
+]]
+script = ExtResource( 2 )
+
+[node name="Player" parent="." groups=[
+"player",
+] instance=ExtResource( 1 )]
+position = Vector2( 129, 91 )
+
+[node name="flame" parent="Player/ship_01" index="0"]
+frame = 0
+
+[node name="Health" parent="Player" index="3"]
+value = 100
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+current = true
+smoothing_enabled = true
+
+[node name="Background" parent="Player/Camera2D" instance=ExtResource( 3 )]
+material = SubResource( 6 )
+scale = Vector2( 14.2452, 19.3113 )
+
+[node name="AI" parent="Player" instance=ExtResource( 4 )]
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" parent="CanvasLayer" instance=ExtResource( 5 )]
+player_path = NodePath("../../Player")
+
+[node name="Settings" parent="CanvasLayer" instance=ExtResource( 6 )]
+visible = false
+
+[editable path="Player"]

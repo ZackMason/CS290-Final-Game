@@ -1,0 +1,50 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Sprites/UI/Buttons/close_button_up.png" type="Texture" id=1]
+[ext_resource path="res://Sprites/UI/Buttons/close_button.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/UI/Buttons/close_button_down.png" type="Texture" id=3]
+[ext_resource path="res://Scenes/UI/Controls.gd" type="Script" id=4]
+
+[node name="Controls" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.360784, 0.341176, 0.615686, 1 )
+
+[node name="RichTextLabel" type="RichTextLabel" parent="ColorRect"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -242.0
+margin_top = -252.0
+margin_right = 243.0
+margin_bottom = 142.0
+text = "This is how you play the game."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Close" type="TextureButton" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -58.0
+margin_top = 202.403
+margin_right = 58.0
+margin_bottom = 257.403
+texture_normal = ExtResource( 2 )
+texture_pressed = ExtResource( 3 )
+texture_hover = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="button_up" from="Close" to="." method="_on_Close_button_up"]
