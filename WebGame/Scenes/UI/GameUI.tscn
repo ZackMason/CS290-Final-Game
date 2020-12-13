@@ -29,7 +29,7 @@ __meta__ = {
 
 [node name="Health" type="TextureProgress" parent="HBoxContainer"]
 margin_right = 152.0
-margin_bottom = 40.0
+margin_bottom = 39.0
 texture_under = ExtResource( 4 )
 texture_over = ExtResource( 2 )
 texture_progress = ExtResource( 1 )
@@ -41,7 +41,7 @@ __meta__ = {
 [node name="Shield" type="TextureProgress" parent="HBoxContainer"]
 margin_left = 452.0
 margin_right = 604.0
-margin_bottom = 40.0
+margin_bottom = 39.0
 value = 88.0
 texture_under = ExtResource( 4 )
 texture_over = ExtResource( 2 )

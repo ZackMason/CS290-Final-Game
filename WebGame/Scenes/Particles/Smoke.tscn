@@ -1,0 +1,89 @@
+[gd_scene load_steps=8 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+render_mode unshaded, blend_mix;
+
+uniform sampler2D noise_1;
+uniform sampler2D noise_2;
+
+uniform float inner = 0.7;
+uniform float outer = 0.3;
+uniform float circle_scale = 0.3;
+uniform float pixel_count = 0.3;
+
+
+uniform vec4 inner_color : hint_color;
+uniform vec4 outer_color : hint_color;
+
+void fragment()
+{
+	vec2 uv = floor(UV.xy * pixel_count) / pixel_count;
+	
+	float n1 = texture(noise_1, uv + vec2(TIME * 0.25, TIME * 1.0)).r;
+	float n2 = texture(noise_2, uv + vec2(TIME * 0.5, TIME * 2.0)).r;
+	
+	float fn = (n1 + n2) / 2.0;
+	float d = length(circle_scale*(UV.xy - 0.5));
+	d = sqrt(1.0 - d*d);
+	d = clamp(d, 0.0, 1.0);
+	fn *= d;
+	
+	if (fn < outer)
+		COLOR = vec4(0.0);
+	else if (fn < inner)
+		COLOR = outer_color;
+	else
+		COLOR = inner_color;
+	
+	//COLOR.rgb = vec3( d);
+	COLOR.a = d*d;
+}"
+
+[sub_resource type="OpenSimplexNoise" id=2]
+period = 135.0
+
+[sub_resource type="NoiseTexture" id=3]
+seamless = true
+noise = SubResource( 2 )
+
+[sub_resource type="OpenSimplexNoise" id=4]
+
+[sub_resource type="NoiseTexture" id=5]
+seamless = true
+noise = SubResource( 4 )
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 1 )
+shader_param/inner = 0.442
+shader_param/outer = 0.375
+shader_param/circle_scale = 2.373
+shader_param/pixel_count = 32.0
+shader_param/inner_color = Color( 0.686275, 0.658824, 0.658824, 1 )
+shader_param/outer_color = Color( 0.219608, 0.219608, 0.219608, 1 )
+shader_param/noise_1 = SubResource( 3 )
+shader_param/noise_2 = SubResource( 5 )
+
+[sub_resource type="ParticlesMaterial" id=7]
+lifetime_randomness = 0.14
+emission_shape = 1
+emission_sphere_radius = 11.39
+flag_disable_z = true
+direction = Vector3( 0, -1, 0 )
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 28.36
+angular_velocity = 112.34
+angular_velocity_random = 0.59
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+radial_accel = -51.06
+damping = 23.4
+scale = 22.28
+scale_random = 0.57
+
+[node name="Smoke" type="Particles2D"]
+material = SubResource( 6 )
+position = Vector2( 0.323936, -0.14595 )
+amount = 60
+local_coords = false
+process_material = SubResource( 7 )

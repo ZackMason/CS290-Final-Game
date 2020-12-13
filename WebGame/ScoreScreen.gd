@@ -18,7 +18,7 @@ func _on_Okay_button_up():
 	
 	var query = JSON.print({'name': input.text, 'score': Score.points})
 	var headers = ["Content-Type: application/json"]
-	var err = $HTTPRequest.request('http://localhost:8888/play.html', headers, false, HTTPClient.METHOD_POST, query)
+	var err = $HTTPRequest.request('http://localhost:8888/play', headers, false, HTTPClient.METHOD_POST, query)
 	if err != OK:
 		print('error sending score')
 	

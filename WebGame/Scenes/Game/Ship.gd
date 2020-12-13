@@ -19,22 +19,25 @@ func _notification(what):
 			Score.emit_signal('score_event', 'enemy_kill')
 
 func _ready():
+	connect('damage', self, '_on_damaged')
+	
 	if not is_in_group('player'):
 		set_collision_layer(2)
-	
+
 func _process(delta):
 	set_applied_torque(ai.output.x * -TURN_SPEED)
-	
+
 	if not ai.output.strafe:
 		apply_central_impulse(Vector2.RIGHT.rotated(global_rotation) * ai.output.y * THRUST_POWER)
-		
 		$ship_01/flame.visible = ai.output.y > 0.1
+		$Smoke.emitting = ai.output.y > 0.1
+		$CPUParticles2D.emitting = ai.output.y > 0.1
 	else:
 		set_linear_velocity(linear_velocity)
-		
+
 	if ai.output.fire and not ai.output.shield:
 		fire()
-	
+
 	$Shield.on = ai.output.shield and power > 0.0
 	$Shield.visible = ai.output.shield and power > 0.0
 	$Health.shield = ai.output.shield and power > 0.0
@@ -44,8 +47,8 @@ func _process(delta):
 	else:
 		power += SHIELD_RESTORE * delta
 	power = clamp(power, 0.0, 100.0)
-		
-		
+
+
 func fire():
 	if can_fire:
 		can_fire = false
@@ -60,6 +63,9 @@ func fire():
 	elif $FireDelay.is_stopped():
 		$FireDelay.start()
 
-
 func _on_FireDelay_timeout():
 	can_fire = true
+
+func _on_damaged(damage):
+	if $Shield.on: return
+	$AnimationPlayer.play("hit")

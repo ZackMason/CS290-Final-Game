@@ -1,0 +1,36 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Scenes/Particles/fire.shader" type="Shader" id=1]
+
+[sub_resource type="OpenSimplexNoise" id=1]
+
+[sub_resource type="NoiseTexture" id=2]
+noise = SubResource( 1 )
+
+[sub_resource type="OpenSimplexNoise" id=3]
+
+[sub_resource type="NoiseTexture" id=4]
+noise = SubResource( 3 )
+
+[sub_resource type="ShaderMaterial" id=5]
+shader = ExtResource( 1 )
+shader_param/inner = 0.443
+shader_param/outer = 0.283
+shader_param/circle_scale = 2.184
+shader_param/pixel_count = 32.0
+shader_param/inner_color = Color( 0.780392, 0.760784, 0.760784, 1 )
+shader_param/outer_color = Color( 0.247059, 0.231373, 0.231373, 1 )
+shader_param/noise_1 = SubResource( 2 )
+shader_param/noise_2 = SubResource( 4 )
+
+[node name="CPUParticles2D" type="CPUParticles2D"]
+material = SubResource( 5 )
+amount = 32
+local_coords = false
+emission_shape = 1
+emission_sphere_radius = 6.5
+spread = 180.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 12.0
+angular_velocity = 92.9
+scale_amount = 20.0

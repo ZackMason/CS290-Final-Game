@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Scenes/UI/Fullscreen.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/UI/Buttons/close_button_up.png" type="Texture" id=2]
@@ -8,6 +8,58 @@
 [ext_resource path="res://Sprites/UI/Buttons/fullscreen_button.png" type="Texture" id=6]
 [ext_resource path="res://Sprites/UI/Buttons/fullscreen_button_up.png" type="Texture" id=7]
 [ext_resource path="res://Scenes/UI/Settings.gd" type="Script" id=8]
+[ext_resource path="res://Scenes/Game/Enviroment/Background.tscn" type="PackedScene" id=9]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+
+uniform vec4 c1 : hint_color;
+uniform vec4 c2 : hint_color;
+
+uniform sampler2D pn1;
+uniform sampler2D pn2;
+uniform vec2 world_pos;
+uniform vec2 scaling = vec2(1,1);
+uniform vec2 world_scaling = vec2(1,1);
+
+void fragment()
+{
+	vec3 color;
+	float n1 = texture(pn1, scaling * (UV.xy + world_pos/world_scaling)).r;
+	float n2 = texture(pn2, scaling * (UV.xy + world_pos/world_scaling)).r;
+	n1 = smoothstep( 0.13, 1.0, (n1 + n2)/2.0);
+	//color = vec3(n1);
+	color = c1.rgb * n1 + c2.rgb * n2;
+	
+	COLOR = vec4(color, n1);
+}"
+
+[sub_resource type="OpenSimplexNoise" id=2]
+
+[sub_resource type="NoiseTexture" id=3]
+seamless = true
+noise = SubResource( 2 )
+
+[sub_resource type="OpenSimplexNoise" id=4]
+seed = 1
+period = 138.0
+persistence = 0.229
+lacunarity = 3.03
+
+[sub_resource type="NoiseTexture" id=5]
+seamless = true
+noise = SubResource( 4 )
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 1 )
+shader_param/c1 = Color( 0.894118, 0.0470588, 0.0470588, 1 )
+shader_param/c2 = Color( 0.207843, 0.215686, 0.686275, 1 )
+shader_param/world_pos = Vector2( 363.663, 329.949 )
+shader_param/scaling = Vector2( 1, 1 )
+shader_param/world_scaling = Vector2( 100, 100 )
+shader_param/pn1 = SubResource( 3 )
+shader_param/pn2 = SubResource( 5 )
 
 [node name="Settings" type="Control"]
 anchor_right = 1.0
@@ -20,7 +72,10 @@ __meta__ = {
 [node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color( 0.47451, 0.47451, 0.47451, 1 )
+color = Color( 0.47451, 0.47451, 0.47451, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ColorRect"]
 anchor_left = 0.5
@@ -102,6 +157,11 @@ margin_bottom = 228.0
 texture_normal = ExtResource( 5 )
 texture_pressed = ExtResource( 3 )
 texture_hover = ExtResource( 2 )
+
+[node name="Background" parent="." instance=ExtResource( 9 )]
+material = SubResource( 6 )
+position = Vector2( 363.663, 329.949 )
+scale = Vector2( 13.1194, 23.0892 )
 [connection signal="value_changed" from="ColorRect/VBoxContainer/VBoxContainer/Master" to="." method="_on_Master_value_changed"]
 [connection signal="value_changed" from="ColorRect/VBoxContainer/VBoxContainer2/SoundFX" to="." method="_on_SoundFX_value_changed"]
 [connection signal="value_changed" from="ColorRect/VBoxContainer/VBoxContainer3/Music" to="." method="_on_Music_value_changed"]
